@@ -10,7 +10,7 @@ import operations from '../../../redux/contacts/contacts-operations';
 
 import styles from './ContactForm.module.css';
 
-const ContactForm = ({onSubmit}) => {
+const ContactForm = () => {
     const list = (useSelector(state => getContacts(state), shallowEqual));
 
     const dispatch = useDispatch();
