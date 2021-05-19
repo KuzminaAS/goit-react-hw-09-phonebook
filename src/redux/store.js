@@ -1,7 +1,8 @@
-import { configureStore, getDefaultMiddleware} from '@reduxjs/toolkit';
+import { configureStore, createSelector, getDefaultMiddleware} from '@reduxjs/toolkit';
 import logger from 'redux-logger';
 import contactsReducer from '../redux/contacts/contacts-reducer';
 import { authReducer } from '../redux/auth';
+import { getContactsFilter, getContacts} from './contacts/contacts-selectors';
 
 import { 
   persistStore,
@@ -39,6 +40,13 @@ const store = configureStore({
     devTools: process.env.NODE_ENV === 'development',
 });
 
+export const getVisibleContacts = createSelector([getContacts, getContactsFilter],
+(items, filter) => {
+    return items.filter(({ name }) =>
+      name.toLowerCase().includes(filter.toLowerCase()),
+    );
+  },
+);
 
 
 const persistor = persistStore(store);

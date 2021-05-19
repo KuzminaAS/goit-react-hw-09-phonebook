@@ -1,67 +1,40 @@
-import React, { Component } from 'react'; 
-
-import ButtonForm from '../../components/ButtonForm';
+import ButtonForm from '../../shared/components/ButtonForm';
 import { Formik, Form, Field } from "formik";
-import { connect } from 'react-redux';
+import { initialValues } from './initialValues';
+import { fields } from "./fields";
+import { useDispatch} from 'react-redux';
 import { authOperations } from '../../redux/auth';
 import styles from './RegisterView.module.css'
 
-class RegisterView extends Component {
-  state = {
-    name: '',
-    email: '',
-    password: '',
-  };
 
-  handleChange = ({ target: { name, value } }) => {
-    this.setState({ [name]: value });
-  };
+const RegisterView = () => {
 
-  handleSubmit = e => {
-    e.preventDefault();
-
-    this.props.onSubmit(this.state);
-
-    this.setState({ name: '', email: '', password: '' });
-  };
-
-  render() {
-    const { name, email, password } = this.state;
+  const dispatch = useDispatch();
 
     return (
-      <Formik>
+      <Formik
+        onSubmit={(values) => {dispatch(authOperations.register(values))}}
+        initialValues={initialValues} 
+      >
         <Form 
-          onSubmit={this.handleSubmit}
           className={styles.form}
           autoComplete="off"
         >
           <label className={styles.label}>
             <Field className={styles.field}
-              type="text"
-              name="name"
-              value={name}
-              onChange={this.handleChange}
-              placeholder=" Name"
+               {...fields.name}
             />
           </label>
 
           <label className={styles.label}>
             <Field className={styles.field}
-              type="email"
-              name="email"
-              value={email}
-              onChange={this.handleChange}
-              placeholder="Email"
+             {...fields.email}
             />
           </label>
 
           <label className={styles.label}>
             <Field className={styles.field}
-              type="password"
-              name="password"
-              value={password}
-              onChange={this.handleChange}
-              placeholder="Password"
+              {...fields.password}
             />
           </label>
 
@@ -69,15 +42,5 @@ class RegisterView extends Component {
         </Form>
       </Formik>
     );
-  }
 }
-
-const mapDispatchToProps = dispatch => ({
-  onSubmit: (data) => dispatch(authOperations.register(data)),
-})
-// alternative: const mapDispatchToProps = {
-//   onSubmit: authOperations.register,
-// }
-
-
-export default connect(null, mapDispatchToProps)(RegisterView);
+export default RegisterView;

@@ -1,27 +1,29 @@
-import React, { Component } from "react";
-import { connect } from 'react-redux';
+import React, {useEffect} from "react";
+import {  useSelector, useDispatch, shallowEqual } from 'react-redux';
 
-import ContactForm from '../../components/ContactForm';
-import ContactList from '../../components/ContactList';
-import Filter from '../../components/Filter';
+import ContactForm from '../../shared/components/ContactForm';
+import ContactList from '../../shared/components/ContactList';
+import Filter from '../../shared/components/Filter';
 
 import operations from '../../redux/contacts/contacts-operations';
 import {getIsLoading} from '../../redux/contacts/contacts-selectors';
 
 import styles from './PhonebookView.module.css'
 
-class PhonebookView extends Component {
+const PhonebookView = () => {
 
-  componentDidMount() {
-    this.props.fetchContacts();
-  }
+  const dispatch = useDispatch();
+  
+  useEffect(() => {
+    dispatch(operations.fetchContacts());
+  }, [dispatch]);
 
-  render() {
+  const isLoadingContacts = useSelector(state => getIsLoading(state), shallowEqual);
 
     return (
     <div>
     <div>
-          {this.props.isLoadingContacts && <h1 className={styles.title}>Загружаем...</h1>}
+          {isLoadingContacts && <h1 className={styles.title}>Загружаем...</h1>}
     </div>
     <div className={styles.container_title}>
       <h2 className={styles.title}>Phonebook</h2>
@@ -34,16 +36,6 @@ class PhonebookView extends Component {
         <ContactList />
     </div>
   )
-  }
 }
-
-const mapStateToProps = state => ({
-  isLoadingContacts: getIsLoading(state)
-})
-
-const mapDispatchToProps = dispatch => ({
-  fetchContacts: () => dispatch(operations.fetchContacts())
-})
-
-export default connect(mapStateToProps,mapDispatchToProps)(PhonebookView);
+export default PhonebookView;
 

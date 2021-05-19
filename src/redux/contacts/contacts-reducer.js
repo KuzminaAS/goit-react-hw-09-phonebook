@@ -38,30 +38,4 @@ const filter = createReducer('', {
 
 export default combineReducers({ items, filter, loading })
 
-
-// const items = (state = [], { type, payload }) => {
-//     switch (type) {
-//       case ADD_TO_CONTACT:
-//         return [...state, payload];
-
-//       case DELETE_CONTACT:
-
-//         return state.filter((_, index) => index !== payload);
-      
-//        default: return state;
-//     }
-  
-//  }
-    
-// const filter = (state = '', {type, payload}) => {
-//     switch (type) {
-//       case CHANGE_FILTER:
-//         return payload;
-      
-//        default: return state;
-//     }
-// }
-// const loading = createReducer(false);
-
-
  

@@ -1,13 +1,13 @@
-import React, {Component, Suspense, lazy} from 'react';
+import React, { Suspense, lazy, useEffect} from 'react';
 import { Switch } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useDispatch } from 'react-redux'
 
 import { authOperations } from './redux/auth';
 
 import Container from './view/Container';
-import NavBar from './components/NavBar';
-import PrivateRoute from './components/PrivateRoute';
-import PublicRoute from './components/PublicRoute';
+import NavBar from './shared/components/NavBar';
+import PrivateRoute from './shared/components/PrivateRoute';
+import PublicRoute from './shared/components/PublicRoute';
 
 
 const RegisterView = lazy(() => import('./view/RegisterView'));
@@ -15,31 +15,28 @@ const LoginView = lazy(() => import('./view/LoginView'));
 const PhonebookView = lazy(() => import('./view/PhonebookView'));
 const HomeView = lazy(() => import('./view/HomeView'));
 
- class App extends Component {
 
-   componentDidMount() {
-     this.props.onGetCurrentUser();
-   }
+const App = () => {
    
-  render() {
-    return (
+   const dispatch = useDispatch();
+
+   useEffect(() => { 
+     dispatch(authOperations.getCurrentUser());
+   }, [dispatch]);
+   
+  return (
   <Container>
     <NavBar />
     <Suspense fallback={<p>Загружаем...</p>}>
       <Switch>
-          <PublicRoute exact path="/" component={HomeView} />
-          <PublicRoute path="/register" restricted component={RegisterView} redirectTo="/contacts"/>
-          <PublicRoute path="/login" restricted component={LoginView} redirectTo="/contacts"/>
-          <PrivateRoute path="/contacts" component={PhonebookView} redirectTo="/login" />
+          <PublicRoute exact path="/" > <HomeView/> </PublicRoute>
+          <PublicRoute path="/register" restricted redirectTo="/contacts"> <RegisterView/> </PublicRoute>
+          <PublicRoute path="/login" restricted  redirectTo="/contacts"> <LoginView/> </PublicRoute>
+          <PrivateRoute path="/contacts" redirectTo="/login" > <PhonebookView/> </PrivateRoute>
      </Switch>
     </Suspense>
   </Container>
   )
   }
-}
 
-const mapDispatchToProps = {
-  onGetCurrentUser: authOperations.getCurrentUser,
-}
-
-export default connect(null, mapDispatchToProps)(App);
+export default App;
