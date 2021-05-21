@@ -7,7 +7,6 @@ import { getVisibleContacts } from '../../../redux/store';
 import styles from './ContactList.module.css'
 
 const ContactList = () => {
-
     const visibleContacts = useSelector(state => getVisibleContacts(state), shallowEqual);
 
     const dispatch = useDispatch();
@@ -18,7 +17,6 @@ const ContactList = () => {
         <ul className={styles.list}>
             {contactElements}
         </ul>
-    
     )
 };
 

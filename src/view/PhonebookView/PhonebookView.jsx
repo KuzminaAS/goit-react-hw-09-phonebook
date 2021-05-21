@@ -1,5 +1,5 @@
-import React, {useEffect} from "react";
-import {  useSelector, useDispatch, shallowEqual } from 'react-redux';
+import React, {useEffect, useState} from "react";
+import { useSelector, useDispatch, shallowEqual } from 'react-redux';
 
 import ContactForm from '../../shared/components/ContactForm';
 import ContactList from '../../shared/components/ContactList';
@@ -12,6 +12,8 @@ import styles from './PhonebookView.module.css'
 
 const PhonebookView = () => {
 
+  const [showAllContacts, setContacts] = useState(false);
+
   const dispatch = useDispatch();
   
   useEffect(() => {
@@ -19,7 +21,10 @@ const PhonebookView = () => {
   }, [dispatch]);
 
   const isLoadingContacts = useSelector(state => getIsLoading(state), shallowEqual);
-
+    const openContacts = () => {
+        setContacts(!showAllContacts)
+    }    
+   const text = showAllContacts ? "Close contacts" : "Open contacts";
     return (
     <div>
     <div>
@@ -32,8 +37,9 @@ const PhonebookView = () => {
         <div className={styles.container_title}>
       <h2 className={styles.title}>Contacts</h2>
     </div> 
-        <Filter />
-        <ContactList />
+     <Filter />
+   <div className={styles.container_button}><button type='button' onClick={openContacts} className={styles.button}>{text}</button></div> 
+        {showAllContacts && <ContactList/>}
     </div>
   )
 }
